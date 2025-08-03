@@ -250,7 +250,11 @@ class player:
         self.isElite=False
         self.gen=0
         #inp self x y opp x y ball x y goal y height out direction vector x,y
+<<<<<<< HEAD
         self.net=neural_network(7,[4],2)
+=======
+        self.net=neural_network(4,[4],2)
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
         self.max_hit_reward=20
         self.hit_reward=2
         self.total_hit_reward=0
@@ -476,12 +480,16 @@ class player:
                 player2ball_vecx,player2ball_vecy=normalize(player2ball_vecx,player2ball_vecy)
                 dotprod=dot_product(self.predx,self.predy,player2ball_vecx,player2ball_vecy)
                 self.similarity=dotprod
+<<<<<<< HEAD
                 if self.similarity<0.5 and self.gen>25:
                     self.score/=4
                     self.mutate()
                 score=self.similarity-min((0.8+self.gen/50),0.999) #increase difficulty with generation
                 if score>0.0001 and self.gen>50:
                     score*=1000
+=======
+                score=self.similarity-min((0.8+self.gen/500),0.9999) #increase difficulty with generation
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
                 self.score+=score*dt*self.interval*5
                 self.score=clamp(self.score,0,1000)
             
@@ -496,7 +504,11 @@ class player:
     def AImovement(self,opp,ball1,goal1):
         #feed inputs get 2 outputs
         self.win_mag=magnitude(winW,winH)
+<<<<<<< HEAD
         out=self.net.forward([self.x/self.win_mag, self.y/self.win_mag, ball1.x/self.win_mag, ball1.y/self.win_mag, opp.x/self.win_mag, opp.y/self.win_mag, goal1.x/self.win_mag])
+=======
+        out=self.net.forward([self.x/self.win_mag,self.y/self.win_mag,ball1.x/self.win_mag,ball1.y/self.win_mag])
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
         vx=out[0]*self.max_vel
         vy=out[1]*self.max_vel
         #print(vx,vy)
@@ -510,7 +522,11 @@ class player:
             #print("mutation happened",self.mutationrate)
         elif rnd<0.8:
             #inp self x y opp x y ball x y goal y height out direction vector x,y
+<<<<<<< HEAD
             self.net=neural_network(7,[4],2)
+=======
+            self.net=neural_network(4,[4],2)
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
             #print('reset network')
         elif rnd<0.9:
             self.game.copy_elite_genes(self)
@@ -550,7 +566,11 @@ class goal:
                 self.goal_count+=1
                 
 class game:
+<<<<<<< HEAD
     def __init__(self,playerRadius=70,ballRadius=50,goalHeight=0,ptw=3):
+=======
+    def __init__(self,playerRadius=70,ballRadius=50,goalHeight=150,ptw=3):
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
         self.pdefposx=winW/4
         self.edefposx=winW/4*3
         self.defposx=winW/2
@@ -558,11 +578,19 @@ class game:
 
         self.player1=player(self.pdefposx,self.defposy,20,playerRadius,(89,100,217),10,True,True)
         self.enemy1=player(self.edefposx,self.defposy,20,playerRadius,(217,58,27),10,False,True)
+<<<<<<< HEAD
         self.random_posx=500
         self.random_posy=300
         self.ball1=ball(self.defposx+random.uniform(-self.random_posx,self.random_posx),self.defposy+random.uniform(-self.random_posy,self.random_posy),1,ballRadius,(230,230,230),1)
         #goalWidth=ballRadius
         goalWidth=0
+=======
+        self.random_posx=100
+        self.random_posy=50
+        self.ball1=ball(self.defposx+random.uniform(-self.random_posx,self.random_posx),self.defposy+random.uniform(-self.random_posy,self.random_posy),1,ballRadius,(230,230,230),1)
+        goalWidth=ballRadius
+        #goalWidth=0
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
         self.goal1=goal(0,winH/2-goalHeight/2,goalWidth,goalHeight,(100,100,220),True)
         self.goal2=goal(winW-goalWidth,winH/2-goalHeight/2,goalWidth,goalHeight,(220,100,100),False)
         self.playerGoals=self.goal2.goal_count
@@ -622,11 +650,19 @@ class game:
         if bpg !=self.playerGoals or beg!=self.enemyGoals:
             #print('goal change')
             if bpg!=self.playerGoals:
+<<<<<<< HEAD
                 self.player1.score*=2
                 self.enemy1.score/=2
             else:
                 self.enemy1.score*=2
                 self.player1.score/=2
+=======
+                self.player1.score+=1
+                self.enemy1.score/=1.2
+            else:
+                self.enemy1.score+=1
+                self.player1.score/=1.2
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
             
             self.partial_reset()
             #print('player goals:',self.playerGoals,self.enemyGoals)
@@ -688,7 +724,11 @@ class game:
             self.draw()
 
     def save_networks(self):
+<<<<<<< HEAD
         if self.player1.isAI and self.player1.isElite :
+=======
+        if self.player1.isAI and self.player1.isElite:
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
             self.player1.save_network()
         if self.enemy1.isAI and self.enemy1.isElite:
             self.enemy1.save_network()  
@@ -766,10 +806,13 @@ class game:
 class training_game:
     def __init__(self,number=10):
         self.games=[game() for _ in range(number)]
+<<<<<<< HEAD
         self.games[0].player1.net.load_from_file("enemy_net_gen_50.txt")#load player net, giving a head start to the first game
         self.games[0].enemy1.net.load_from_file("enemy_net_gen_50.txt")#load player net
         self.games[1].player1.net.load_from_file("enemy_net_gen_25.txt")#load player net, giving a head start to the first game
         self.games[1].enemy1.net.load_from_file("enemy_net_gen_25.txt")#load player net
+=======
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
         self.eliteIndexes=[None]#indexes of elite games
         self.elitesNumber=round(number/10)
         self.find_elites(self.elitesNumber)
@@ -846,14 +889,23 @@ meters2pix=3800
 #--------------
 win=py.display.set_mode((winW,winH))
 py.display.set_caption("football")
+<<<<<<< HEAD
 font=py.font.Font("SpaceMono-Regular.ttf", 18)
 smallfont=py.font.Font("SpaceMono-Regular.ttf", 12)
+=======
+font=py.font.SysFont(None, 18)
+smallfont=py.font.SysFont(None, 15)
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
 game1=training_game(200)
 game1.elitesNumber=20
 game2=game()
 game2.player1.isAI=False
 game2.enemy1.isAI=True
+<<<<<<< HEAD
 game2.enemy1.net.load_from_file("player_net_gen_31.txt")#load player net
+=======
+game2.enemy1.net.load_from_file("player_net_gen_155.txt")#load player net
+>>>>>>> d003124207b26435693a5ee9ad4c6edb824b19df
 fps=100
 dt=1/fps
 txtstr=f"FPS:{fps}"
